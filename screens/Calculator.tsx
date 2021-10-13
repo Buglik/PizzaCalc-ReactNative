@@ -18,9 +18,7 @@ const DismissKeyboard = ({ children }: { children: any }) => (
   </TouchableWithoutFeedback>
 );
 
-export default function TabOneScreen({
-  navigation,
-}: RootTabScreenProps<'TabOne'>) {
+export default function Calculator({ pizzaItems, setPizzaItems }: any) {
   const [price, setPrice] = useState('');
 
   const [pizzaShape, setPizzaShape] = useState('circle');
@@ -31,6 +29,8 @@ export default function TabOneScreen({
   const [length, setLength] = useState('');
   const [width, setWidth] = useState('');
   const [rectangleResult, setRectangleResult] = useState('');
+
+  const [pizzeriaName, setPizzeriaName] = useState('');
 
   const calcCircleResult = () => {
     return (
@@ -45,6 +45,13 @@ export default function TabOneScreen({
     return ((parseInt(width) * parseInt(length)) / parseInt(price))
       .toFixed(0)
       .toString();
+  };
+
+  const addItem = () => {
+    if (pizzeriaName) {
+      setPizzaItems([...pizzaItems, pizzeriaName]);
+      setPizzeriaName('');
+    }
   };
 
   useEffect(() => {
@@ -122,6 +129,15 @@ export default function TabOneScreen({
         ) : (
           <Text style={styles.result}>Result: {rectangleResult}</Text>
         )}
+        <TextInput
+          onChangeText={setPizzeriaName}
+          value={pizzeriaName}
+          label="Pizzeria name"
+          style={{ margin: 10 }}
+        ></TextInput>
+        <Button mode="contained" style={{ margin: 10 }} onPress={addItem}>
+          Add to list
+        </Button>
       </SafeAreaView>
     </DismissKeyboard>
   );
