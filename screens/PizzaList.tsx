@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
+import {Text, View} from '../components/Themed';
+import IPizzaProps from "../types/PizzaProps";
+import Pizza from "../types/Pizza";
 
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
-
-export default function PizzaList({ pizzaItems, setPizzaItems }: any) {
+export default function PizzaList({ pizzaItems, setPizzaItems }: IPizzaProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>List</Text>
 
-      {pizzaItems?.map((item: any, index: number) => (
-        <Text key={`${item}${index}`}>{item}</Text>
+      {pizzaItems?.map((item: Pizza, index: number) => (
+        <Text key={`${item}${index}`}>{item.name} {item.pizzeriaName}</Text>
       ))}
     </View>
   );

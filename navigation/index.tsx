@@ -1,13 +1,9 @@
-import { FontAwesome } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {
-  NavigationContainer,
-  DefaultTheme,
-  DarkTheme,
-} from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
+import {FontAwesome} from '@expo/vector-icons';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {DarkTheme, DefaultTheme, NavigationContainer,} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React, {useState} from 'react';
+import {ColorSchemeName} from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -15,12 +11,9 @@ import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import Calculator from '../screens/Calculator';
 import PizzaList from '../screens/PizzaList';
-import {
-  RootStackParamList,
-  RootTabParamList,
-  RootTabScreenProps,
-} from '../types';
+import {RootStackParamList, RootTabParamList, RootTabScreenProps,} from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import Pizza from "../types/Pizza";
 
 export default function Navigation({
   colorScheme,
@@ -62,7 +55,7 @@ function RootNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
-  const [pizzaItems, setPizzaItems] = useState([]);
+  const [pizzaItems, setPizzaItems] = useState<Pizza[]>([]);
 
   const TabOneScreen = () => (
     <Calculator pizzaItems={pizzaItems} setPizzaItems={setPizzaItems} />

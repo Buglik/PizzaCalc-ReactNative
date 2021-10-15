@@ -1,169 +1,164 @@
-import React, { useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  View,
-  Switch,
-  Text,
-  TouchableWithoutFeedback,
-  Keyboard,
-  SafeAreaView,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Keyboard, SafeAreaView, StyleSheet, Text, TouchableWithoutFeedback, View,} from 'react-native';
+import {Button, TextInput, ToggleButton} from 'react-native-paper';
+import {Shape} from "../types/Shape";
+import NumericInput from "react-native-numeric-input"
+import Pizza from "../types/Pizza";
+import IPizzaProps from "../types/PizzaProps";
 
-import { RootTabScreenProps } from '../types';
-import { Button, ToggleButton, TextInput } from 'react-native-paper';
-
-const DismissKeyboard = ({ children }: { children: any }) => (
-  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-    {children}
-  </TouchableWithoutFeedback>
+const DismissKeyboard = ({children}: { children: any }) => (
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        {children}
+    </TouchableWithoutFeedback>
 );
 
-export default function Calculator({ pizzaItems, setPizzaItems }: any) {
-  const [price, setPrice] = useState('');
+export default function Calculator({pizzaItems, setPizzaItems}: IPizzaProps) {
+    const [price, setPrice] = useState<number>(0);
+    const [pizzaShape, setPizzaShape] = useState<Shape>(Shape.round);
+    const [diameter, setDiameter] = useState<number>();
+    const [length, setLength] = useState<number>();
+    const [width, setWidth] = useState<number>();
 
-  const [pizzaShape, setPizzaShape] = useState('circle');
+    const [result, setResult] = useState<number>(0);
+    const [pizzaName, setPizzaName] = useState<string>('');
+    const [pizzeriaName, setPizzeriaName] = useState<string>('');
 
-  const [diameter, setDiameter] = useState('');
-  const [circleResult, setCircleResult] = useState('');
+    const calcCircleResult = () =>
+        diameter && price ? Math.round(((diameter / 2) * (diameter / 2) * 3.14) / price) : 0;
 
-  const [length, setLength] = useState('');
-  const [width, setWidth] = useState('');
-  const [rectangleResult, setRectangleResult] = useState('');
+    const calcRectangleResult = () =>
+        width && length && price ? Math.round((width * length) / price) : 0;
 
-  const [pizzeriaName, setPizzeriaName] = useState('');
+    const addItem = () => {
+        if (pizzeriaName || pizzaName) {
+            const newPizza: Pizza = {
+                name: pizzaName,
+                pizzeriaName: pizzeriaName,
+                cost: price,
+                dimensions: {
+                    diameter,
+                    width,
+                    length
+                },
+                shape: pizzaShape,
+                result
+            }
+            setPizzaItems([...pizzaItems, newPizza]);
+            setPizzeriaName('');
+        }
+    };
 
-  const calcCircleResult = () => {
+    useEffect(() => {
+        pizzaShape === Shape.round ? setResult(calcCircleResult()) : setResult(calcRectangleResult())
+    }, [price, diameter, width, length, pizzaShape]);
+
     return (
-      ((parseInt(diameter) / 2) * (parseInt(diameter) / 2) * 3.14) /
-      parseInt(price)
-    )
-      .toFixed(0)
-      .toString();
-  };
+        <DismissKeyboard>
+            <SafeAreaView style={styles.container}>
+                <NumericInput
+                    onChange={setPrice}
+                    value={price}
+                    rounded
+                    minValue={0}
+                    // style={styles.input}
+                    // keyboardType={'numeric'}
+                />
+                <Text style={styles.label}>
+                    Pizza shape
+                </Text>
+                <ToggleButton.Row
+                    onValueChange={(value: string) => {
+                        value === Shape.round ? setPizzaShape(Shape.round) : setPizzaShape(Shape.square)
+                    }}
+                    value={pizzaShape}
+                    style={{margin: 10}}
+                >
+                    <ToggleButton icon="circle" value={Shape.round}/>
+                    <ToggleButton icon="rectangle" value={Shape.square}/>
+                </ToggleButton.Row>
 
-  const calcRectangleResult = () => {
-    return ((parseInt(width) * parseInt(length)) / parseInt(price))
-      .toFixed(0)
-      .toString();
-  };
-
-  const addItem = () => {
-    if (pizzeriaName) {
-      setPizzaItems([...pizzaItems, pizzeriaName]);
-      setPizzeriaName('');
-    }
-  };
-
-  useEffect(() => {
-    if (price && diameter) {
-      const result = calcCircleResult();
-      if (result !== 'NaN') setCircleResult(result);
-      else setCircleResult('Wrong input');
-    }
-
-    if (price && width && length) {
-      const result = calcRectangleResult();
-      if (result !== 'NaN') setRectangleResult(result);
-      else setRectangleResult('Wrong input');
-    }
-  }, [price, diameter, width, length]);
-
-  return (
-    <DismissKeyboard>
-      <SafeAreaView style={styles.container}>
-        <TextInput
-          onChangeText={setPrice}
-          value={price}
-          label="Price (zł)"
-          style={styles.input}
-          keyboardType={'numeric'}
-        />
-        <Text style={styles.label}>
-          {pizzaShape === 'circle' ? 'Circle' : 'Rectangle'}
-        </Text>
-        <ToggleButton.Row
-          onValueChange={(value) => setPizzaShape(value)}
-          value={pizzaShape}
-          style={{ margin: 10 }}
-        >
-          <ToggleButton icon="circle" value="circle" />
-          <ToggleButton icon="rectangle" value="rectangle" />
-        </ToggleButton.Row>
-
-        {pizzaShape === 'circle' ? (
-          <View style={{ margin: 10 }}>
-            <TextInput
-              onChangeText={setDiameter}
-              value={diameter}
-              label="Diameter (cm)"
-              style={styles.inputCircle}
-              keyboardType={'numeric'}
-            />
-          </View>
-        ) : (
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              margin: 10,
-            }}
-          >
-            <TextInput
-              onChangeText={setLength}
-              value={length}
-              label="Length (cm)"
-              style={styles.inputRectangle}
-              keyboardType={'numeric'}
-            />
-            <TextInput
-              onChangeText={setWidth}
-              value={width}
-              label="Width (cm)"
-              style={styles.inputRectangle}
-              keyboardType={'numeric'}
-            />
-          </View>
-        )}
-        {pizzaShape === 'circle' ? (
-          <Text style={styles.result}>Result: {circleResult}</Text>
-        ) : (
-          <Text style={styles.result}>Result: {rectangleResult}</Text>
-        )}
-        <TextInput
-          onChangeText={setPizzeriaName}
-          value={pizzeriaName}
-          label="Pizzeria name"
-          style={{ margin: 10 }}
-        ></TextInput>
-        <Button mode="contained" style={{ margin: 10 }} onPress={addItem}>
-          Add to list
-        </Button>
-      </SafeAreaView>
-    </DismissKeyboard>
-  );
+                {pizzaShape === Shape.round ?
+                    <View style={{margin: 10}}>
+                        <NumericInput
+                            onChange={setDiameter}
+                            value={diameter}
+                            rounded
+                            minValue={0}
+                            // label="Diameter (cm)"
+                            // style={styles.inputCircle}
+                            // keyboardType={'numeric'}
+                        />
+                    </View>
+                    :
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            margin: 10,
+                        }}
+                    >
+                        <NumericInput
+                            onChange={setLength}
+                            value={length}
+                            rounded
+                            minValue={0}
+                            // label="Length (cm)"
+                            // style={styles.inputRectangle}
+                            // keyboardType={'numeric'}
+                        />
+                        <NumericInput
+                            onChange={setWidth}
+                            value={width}
+                            rounded
+                            minValue={0}
+                            // label="Width (cm)"
+                            // style={styles.inputRectangle}
+                            // keyboardType={'numeric'}
+                        />
+                    </View>
+                }
+                <Text style={styles.result}>Result: {result}</Text>
+                <TextInput
+                    onChangeText={setPizzeriaName}
+                    value={pizzeriaName}
+                    label="Pizzeria"
+                    style={{margin: 10}}
+                ></TextInput>
+                <TextInput
+                    onChangeText={setPizzaName}
+                    value={pizzaName}
+                    label="Pizza name"
+                    style={{margin: 10}}
+                ></TextInput>
+                <Button mode="contained" style={{margin: 10}} onPress={addItem}>
+                    Add to list
+                </Button>
+            </SafeAreaView>
+        </DismissKeyboard>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // display: 'flex',
-    // alignItems: 'center',
-    // justifyContent: 'space-between',
-    // height: 300,
-    margin: 20,
-  },
-  label: {
-    margin: 10,
-  },
-  input: { margin: 10 },
-  inputCircle: {},
-  inputRectangle: {
-    // height: 40,
-    // fontSize: 15,
-    width: 150,
-  },
-  result: {
-    fontSize: 30,
-    margin: 10,
-  },
+    container: {
+        flex: 1,
+        // display: 'flex',
+        // alignItems: 'center',
+        // justifyContent: 'space-between',
+        // height: 300,
+        margin: 20,
+    },
+    label: {
+        margin: 10,
+    },
+    input: {margin: 10},
+    inputCircle: {},
+    inputRectangle: {
+        // height: 40,
+        // fontSize: 15,
+        width: 150,
+    },
+    result: {
+        fontSize: 30,
+        margin: 10,
+    },
 });
