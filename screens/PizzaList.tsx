@@ -1,34 +1,98 @@
 import * as React from 'react';
-import {StyleSheet} from 'react-native';
-import {Text, View} from '../components/Themed';
+import {View} from '../components/Themed';
 import IPizzaProps from "../types/PizzaProps";
-import Pizza from "../types/Pizza";
+import Pizza, {Dimensions} from "../types/Pizza";
+import {List, Text} from 'react-native-paper';
+import {StyleSheet} from 'react-native';
+import {Shape} from "../types/Shape";
 
-export default function PizzaList({ pizzaItems, setPizzaItems }: IPizzaProps) {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>List</Text>
+export default function PizzaList({pizzaItems, setPizzaItems}: IPizzaProps) {
 
-      {pizzaItems?.map((item: Pizza, index: number) => (
-        <Text key={`${item}${index}`}>{item.name} {item.pizzeriaName}</Text>
-      ))}
-    </View>
-  );
+    function groupBy(collection: any, property: string) {
+        var i = 0, val, index,
+            values = [], result = [];
+        for (; i < collection.length; i++) {
+            val = collection[i][property];
+            index = values.indexOf(val);
+            if (index > -1)
+                result[index].push(collection[i]);
+            else {
+                values.push(val);
+                result.push([collection[i]]);
+            }
+        }
+        return result;
+    }
+
+    const pizzasGroupedByPizzeria = groupBy(pizzaItems, "pizzeriaName");
+
+    const getPizzaDimensions = (dimensions: Dimensions) => {
+        if (dimensions.diameter) {
+            return dimensions.diameter + ' cm | '
+        } else if (dimensions.length && dimensions.width) {
+            return dimensions.width + 'x' + dimensions.length + ' cm | '
+        } else {
+            return ""
+        }
+    }
+
+
+    return (
+        <View style={styles.container}>
+            {pizzasGroupedByPizzeria?.map((pizzas: Pizza[], index: number) => (
+                <List.Section key={`${pizzas}${index}`} style={styles.listSection}>
+                    <List.Subheader
+                        style={styles.listSectionHeader}>{pizzas[0].pizzeriaName || 'Pizzeria undefined'}</List.Subheader>
+                    {pizzas.map((pizza: Pizza, pIndex: number) => (
+                        <List.Item key={`${pizza}${pIndex}`}
+                                   style={styles.listItem}
+                                   title={pizza.name}
+                                   description={getPizzaDimensions(pizza.dimensions) + pizza.cost + 'zł'}
+                                   left={props => <List.Icon
+                                       icon={pizza.shape === Shape.round ? 'circle' : 'rectangle'}/>}
+                                   right={() => (
+                                       <View>
+                                           <Text style={{textAlign: 'center',color:'green', fontSize:16}}>{pizza?.result}</Text>
+                                           <List.Icon icon='delete'/>
+                                       </View>)}/>
+                    ))}
+                </List.Section>
+            ))}
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
+    container: {
+        // width: '100%',
+        flex: 1,
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        // margin: 20,
+    },
+    listItem: {
+        // backgroundColor: '#555555',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    listSection: {
+        // borderBottomColor: '#2f95dc',
+        borderBottomColor: '#EEEEEE',
+        borderBottomWidth: 1,
+        paddingHorizontal: 10,
+    },
+    listSectionHeader: {
+        margin: 0,
+        padding: 0
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    separator: {
+        // marginVertical: 30,
+        // height: 1,
+        width: '80%',
+    },
 });

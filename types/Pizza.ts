@@ -5,10 +5,12 @@ export default interface Pizza {
     shape: Shape;
     cost: number;
     result: number;
-    dimensions: {
-        diameter?: number;
-        width?: number;
-        length?: number;
-    }
+    dimensions: Dimensions
     pizzeriaName: string;
+}
+
+export interface Dimensions {
+    diameter?: number;
+    width?: number;
+    length?: number;
 }
