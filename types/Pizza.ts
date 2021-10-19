@@ -1,17 +1,17 @@
-import {Shape} from "./Shape";
+import { Shape } from './Shape';
 
 export default interface Pizza {
-    id: any;
-    name: string;
-    shape: Shape;
-    cost: number;
-    result: number;
-    dimensions: Dimensions
-    pizzeriaName: string;
+  id: any;
+  name: string;
+  shape: Shape;
+  cost: string;
+  result: string;
+  dimensions: Dimensions;
+  pizzeriaName: string;
 }
 
 export interface Dimensions {
-    diameter?: number;
-    width?: number;
-    length?: number;
+  diameter?: string;
+  width?: string;
+  length?: string;
 }
