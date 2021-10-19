@@ -2,7 +2,7 @@ import * as React from 'react';
 import {View} from '../components/Themed';
 import IPizzaProps from "../types/PizzaProps";
 import Pizza, {Dimensions} from "../types/Pizza";
-import {Button, List, Text} from 'react-native-paper';
+import {IconButton, List, Text} from 'react-native-paper';
 import {ScrollView, StyleSheet} from 'react-native';
 import {Shape} from "../types/Shape";
 
@@ -31,10 +31,11 @@ export default function PizzaList({pizzaItems, setPizzaItems}: IPizzaProps) {
     const pizzasGroupedByPizzeria = groupBy(pizzaItems, "pizzeriaName");
 
     const getPizzaDimensions = (dimensions: Dimensions) => {
-        if (dimensions.diameter) {
-            return dimensions.diameter + ' cm | '
-        } else if (dimensions.length && dimensions.width) {
+
+        if (dimensions.length && dimensions.width) {
             return dimensions.width + 'x' + dimensions.length + ' cm | '
+        } else if (dimensions.diameter) {
+            return dimensions.diameter + ' cm | '
         } else {
             return ""
         }
@@ -52,17 +53,16 @@ export default function PizzaList({pizzaItems, setPizzaItems}: IPizzaProps) {
                                    style={styles.listItem}
                                    title={pizza.name}
                                    description={getPizzaDimensions(pizza.dimensions) + pizza.cost + 'zł'}
-                                   left={props => <List.Icon
+                                   left={props => <List.Icon style={{display: 'flex', alignItems:'center'}}
                                        icon={pizza.shape === Shape.round ? 'circle' : 'rectangle'}/>}
                                    right={() => (
                                        <View>
                                            <Text style={{
                                                textAlign: 'center',
-                                               color: 'green',
                                                fontSize: 16
                                            }}>{pizza?.result}</Text>
-                                           <Button icon='delete' onPress={() => deletePizza(pizza.id)}>
-                                           </Button>
+                                           <IconButton color='red' icon='delete' onPress={() => deletePizza(pizza.id)}>
+                                           </IconButton>
                                        </View>)}/>
                     ))}
                 </List.Section>
@@ -73,35 +73,28 @@ export default function PizzaList({pizzaItems, setPizzaItems}: IPizzaProps) {
 
 const styles = StyleSheet.create({
     container: {
-        // width: '100%',
         flex: 1,
-        // alignItems: 'center',
-        // justifyContent: 'center',
-        // margin: 20,
+        backgroundColor: 'white'
     },
     listItem: {
-        // backgroundColor: '#555555',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
     },
     listSection: {
-        // borderBottomColor: '#2f95dc',
         borderBottomColor: '#EEEEEE',
         borderBottomWidth: 1,
         paddingHorizontal: 10,
     },
     listSectionHeader: {
-        margin: 0,
-        padding: 0
+        paddingBottom: 0,
+        lineHeight: 8,
     },
     title: {
         fontSize: 20,
         fontWeight: 'bold',
     },
     separator: {
-        // marginVertical: 30,
-        // height: 1,
         width: '80%',
     },
 });
