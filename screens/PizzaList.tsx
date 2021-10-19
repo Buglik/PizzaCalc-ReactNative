@@ -2,7 +2,7 @@ import * as React from 'react';
 import {View} from '../components/Themed';
 import IPizzaProps from "../types/PizzaProps";
 import Pizza, {Dimensions} from "../types/Pizza";
-import {List, Text} from 'react-native-paper';
+import {Button, List, Text} from 'react-native-paper';
 import {ScrollView, StyleSheet} from 'react-native';
 import {Shape} from "../types/Shape";
 
@@ -22,6 +22,10 @@ export default function PizzaList({pizzaItems, setPizzaItems}: IPizzaProps) {
             }
         }
         return result;
+    }
+
+    function deletePizza(id: any) {
+        setPizzaItems(pizzaItems.filter((el) => el.id != id));
     }
 
     const pizzasGroupedByPizzeria = groupBy(pizzaItems, "pizzeriaName");
@@ -57,7 +61,8 @@ export default function PizzaList({pizzaItems, setPizzaItems}: IPizzaProps) {
                                                color: 'green',
                                                fontSize: 16
                                            }}>{pizza?.result}</Text>
-                                           <List.Icon icon='delete'/>
+                                           <Button icon='delete' onPress={() => deletePizza(pizza.id)}>
+                                           </Button>
                                        </View>)}/>
                     ))}
                 </List.Section>
