@@ -3,7 +3,7 @@ import {View} from '../components/Themed';
 import IPizzaProps from "../types/PizzaProps";
 import Pizza, {Dimensions} from "../types/Pizza";
 import {List, Text} from 'react-native-paper';
-import {StyleSheet} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 import {Shape} from "../types/Shape";
 
 export default function PizzaList({pizzaItems, setPizzaItems}: IPizzaProps) {
@@ -38,13 +38,13 @@ export default function PizzaList({pizzaItems, setPizzaItems}: IPizzaProps) {
 
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             {pizzasGroupedByPizzeria?.map((pizzas: Pizza[], index: number) => (
                 <List.Section key={`${pizzas}${index}`} style={styles.listSection}>
                     <List.Subheader
                         style={styles.listSectionHeader}>{pizzas[0].pizzeriaName || 'Pizzeria undefined'}</List.Subheader>
                     {pizzas.map((pizza: Pizza, pIndex: number) => (
-                        <List.Item key={`${pizza}${pIndex}`}
+                        <List.Item key={pizza.id}
                                    style={styles.listItem}
                                    title={pizza.name}
                                    description={getPizzaDimensions(pizza.dimensions) + pizza.cost + 'zł'}
@@ -52,13 +52,17 @@ export default function PizzaList({pizzaItems, setPizzaItems}: IPizzaProps) {
                                        icon={pizza.shape === Shape.round ? 'circle' : 'rectangle'}/>}
                                    right={() => (
                                        <View>
-                                           <Text style={{textAlign: 'center',color:'green', fontSize:16}}>{pizza?.result}</Text>
+                                           <Text style={{
+                                               textAlign: 'center',
+                                               color: 'green',
+                                               fontSize: 16
+                                           }}>{pizza?.result}</Text>
                                            <List.Icon icon='delete'/>
                                        </View>)}/>
                     ))}
                 </List.Section>
             ))}
-        </View>
+        </ScrollView>
     );
 }
 

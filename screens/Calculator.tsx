@@ -5,6 +5,8 @@ import {Shape} from "../types/Shape";
 import NumericInput from "react-native-numeric-input"
 import Pizza from "../types/Pizza";
 import IPizzaProps from "../types/PizzaProps";
+import uuid from 'react-native-uuid';
+
 
 const DismissKeyboard = ({children}: { children: any }) => (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -32,6 +34,7 @@ export default function Calculator({pizzaItems, setPizzaItems}: IPizzaProps) {
     const addItem = () => {
         if (pizzeriaName || pizzaName) {
             const newPizza: Pizza = {
+                id: uuid.v4(),
                 name: pizzaName,
                 pizzeriaName: pizzeriaName,
                 cost: price,

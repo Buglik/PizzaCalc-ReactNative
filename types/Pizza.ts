@@ -1,6 +1,7 @@
 import {Shape} from "./Shape";
 
 export default interface Pizza {
+    id: any;
     name: string;
     shape: Shape;
     cost: number;
