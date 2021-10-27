@@ -41,6 +41,11 @@ export default function PizzaList({pizzaItems, setPizzaItems}: IPizzaProps) {
         }
     }
 
+    const sortPizzasByResult = (a: Pizza, b: Pizza) => {
+        const aInt: number = parseInt(a.result);
+        const bInt: number = parseInt(b.result);
+        return aInt - bInt;
+    }
 
     return (
         <ScrollView style={styles.container}>
@@ -48,13 +53,13 @@ export default function PizzaList({pizzaItems, setPizzaItems}: IPizzaProps) {
                 <List.Section key={`${pizzas}${index}`} style={styles.listSection}>
                     <List.Subheader
                         style={styles.listSectionHeader}>{pizzas[0].pizzeriaName || 'Pizzeria undefined'}</List.Subheader>
-                    {pizzas.map((pizza: Pizza, pIndex: number) => (
+                    {pizzas.sort(sortPizzasByResult).map((pizza: Pizza, pIndex: number) => (
                         <List.Item key={pizza.id}
                                    style={styles.listItem}
                                    title={pizza.name}
                                    description={getPizzaDimensions(pizza.dimensions) + pizza.cost + 'zł'}
-                                   left={props => <List.Icon style={{display: 'flex', alignItems:'center'}}
-                                       icon={pizza.shape === Shape.round ? 'circle' : 'rectangle'}/>}
+                                   left={props => <List.Icon style={{display: 'flex', alignItems: 'center'}}
+                                                             icon={pizza.shape === Shape.round ? 'circle' : 'rectangle'}/>}
                                    right={() => (
                                        <View>
                                            <Text style={{
