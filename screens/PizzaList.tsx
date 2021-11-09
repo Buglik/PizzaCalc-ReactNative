@@ -44,7 +44,7 @@ export default function PizzaList({pizzaItems, setPizzaItems}: IPizzaProps) {
     const sortPizzasByResult = (a: Pizza, b: Pizza) => {
         const aInt: number = parseInt(a.result);
         const bInt: number = parseInt(b.result);
-        return aInt - bInt;
+        return bInt - aInt;
     }
 
     return (

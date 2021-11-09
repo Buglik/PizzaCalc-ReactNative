@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Keyboard,
   SafeAreaView,
@@ -6,12 +6,22 @@ import {
   Text,
   TouchableWithoutFeedback,
   View,
-} from 'react-native';
-import { Button, TextInput, ToggleButton } from 'react-native-paper';
-import { Shape } from '../types/Shape';
-import Pizza from '../types/Pizza';
-import IPizzaProps from '../types/PizzaProps';
-import uuid from 'react-native-uuid';
+} from "react-native";
+import { Button, TextInput, ToggleButton } from "react-native-paper";
+import { Shape } from "../types/Shape";
+import Pizza from "../types/Pizza";
+import IPizzaProps from "../types/PizzaProps";
+import uuid from "react-native-uuid";
+
+const themeColor = "#2F95DC";
+
+const theme = {
+  colors: {
+    primary: themeColor,
+  },
+};
+//
+// const themeColor= {{ colors: { text: this.props.style.color } }}
 
 const DismissKeyboard = ({ children }: { children: any }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -20,15 +30,15 @@ const DismissKeyboard = ({ children }: { children: any }) => (
 );
 
 export default function Calculator({ pizzaItems, setPizzaItems }: IPizzaProps) {
-  const [price, setPrice] = useState<string>('');
+  const [price, setPrice] = useState<string>("");
   const [pizzaShape, setPizzaShape] = useState<Shape>(Shape.round);
-  const [diameter, setDiameter] = useState<string>('');
-  const [length, setLength] = useState<string>('');
-  const [width, setWidth] = useState<string>('');
+  const [diameter, setDiameter] = useState<string>("");
+  const [length, setLength] = useState<string>("");
+  const [width, setWidth] = useState<string>("");
 
-  const [result, setResult] = useState<string>('');
-  const [pizzaName, setPizzaName] = useState<string>('');
-  const [pizzeriaName, setPizzeriaName] = useState<string>('');
+  const [result, setResult] = useState<string>("");
+  const [pizzaName, setPizzaName] = useState<string>("");
+  const [pizzeriaName, setPizzeriaName] = useState<string>("");
 
   const calcCircleResult = () => {
     if (diameter && price) {
@@ -38,7 +48,7 @@ export default function Calculator({ pizzaItems, setPizzaItems }: IPizzaProps) {
       )
         .toFixed(0)
         .toString();
-    } else return '0';
+    } else return "0";
   };
 
   const calcRectangleResult = () => {
@@ -46,7 +56,7 @@ export default function Calculator({ pizzaItems, setPizzaItems }: IPizzaProps) {
       return ((parseInt(width) * parseInt(length)) / parseInt(price))
         .toFixed(0)
         .toString();
-    } else return '0';
+    } else return "0";
   };
 
   const addItem = () => {
@@ -65,7 +75,7 @@ export default function Calculator({ pizzaItems, setPizzaItems }: IPizzaProps) {
         result,
       };
       setPizzaItems([...pizzaItems, newPizza]);
-      setPizzeriaName('');
+      setPizzeriaName("");
     }
   };
 
@@ -84,7 +94,8 @@ export default function Calculator({ pizzaItems, setPizzaItems }: IPizzaProps) {
             value={price}
             label="Price (zł)"
             style={styles.input}
-            keyboardType={'numeric'}
+            keyboardType={"numeric"}
+            theme={theme}
           />
           <Text style={styles.label}>Pizza shape</Text>
           <ToggleButton.Row
@@ -106,14 +117,15 @@ export default function Calculator({ pizzaItems, setPizzaItems }: IPizzaProps) {
                 value={diameter}
                 label="Diameter (cm)"
                 style={styles.inputCircle}
-                keyboardType={'numeric'}
+                keyboardType={"numeric"}
+                theme={theme}
               />
             </View>
           ) : (
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                flexDirection: "row",
+                justifyContent: "space-between",
                 margin: 10,
               }}
             >
@@ -122,14 +134,16 @@ export default function Calculator({ pizzaItems, setPizzaItems }: IPizzaProps) {
                 value={length}
                 label="Length (cm)"
                 style={styles.inputRectangle}
-                keyboardType={'numeric'}
+                keyboardType={"numeric"}
+                theme={theme}
               />
               <TextInput
                 onChangeText={setWidth}
                 value={width}
                 label="Width (cm)"
                 style={styles.inputRectangle}
-                keyboardType={'numeric'}
+                keyboardType={"numeric"}
+                theme={theme}
               />
             </View>
           )}
@@ -139,13 +153,13 @@ export default function Calculator({ pizzaItems, setPizzaItems }: IPizzaProps) {
           style={{
             padding: 10,
             borderRadius: 100,
-            borderColor: 'grey',
+            borderColor: "grey",
             borderWidth: 2,
             width: 120,
             height: 120,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <Text style={styles.result}>{result}</Text>
@@ -157,14 +171,20 @@ export default function Calculator({ pizzaItems, setPizzaItems }: IPizzaProps) {
             value={pizzeriaName}
             label="Pizzeria"
             style={styles.input}
+            theme={theme}
           ></TextInput>
           <TextInput
             onChangeText={setPizzaName}
             value={pizzaName}
             label="Pizza name"
             style={styles.input}
+            theme={theme}
           ></TextInput>
-          <Button mode="contained" style={{ margin: 10 }} onPress={addItem}>
+          <Button
+            mode="contained"
+            style={{ margin: 10, backgroundColor: themeColor }}
+            onPress={addItem}
+          >
             Add to list
           </Button>
         </View>
@@ -176,23 +196,23 @@ export default function Calculator({ pizzaItems, setPizzaItems }: IPizzaProps) {
 const styles = StyleSheet.create({
   container: {
     // flex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    height: '100%',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    height: "100%",
     // margin: 20,
     // marginBottom: 60,
   },
   upContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   label: {
     // margin: 10,
   },
-  input: { margin: 10, width: 300 },
-  inputCircle: { margin: 10, width: 300 },
+  input: { margin: 10, width: 300, color: themeColor },
+  inputCircle: { margin: 10, width: 300, color: themeColor },
   inputRectangle: {
     marginHorizontal: 5,
     marginVertical: 10,
